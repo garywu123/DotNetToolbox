@@ -2,5 +2,7 @@
   <Folder Name="/doc/">
     <File Path="doc/Overview.md" />
   </Folder>
+  <Project Path="DotNetToolbox.Algorithms/DotNetToolbox.Algorithms.csproj" />
   <Project Path="DotNetToolbox.Data.Csv/DotNetToolbox.Data.Csv.csproj" />
+  <Project Path="DotNetToolbox.Tests/DotNetToolbox.Tests.csproj" />
 </Solution>
