@@ -30,4 +30,8 @@
     <ProjectReference Include="..\DotNetToolbox.Data.SqlServer\DotNetToolbox.Data.SqlServer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="TestHelpers/TestSchema.sql" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
