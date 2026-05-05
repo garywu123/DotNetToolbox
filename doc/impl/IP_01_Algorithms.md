@@ -1,12 +1,12 @@
-# IP-01: Toolbox.Algorithms
+# IP-01: DotNetToolbox.Algorithms
 
 ## Overview
 
 | Item | Value |
 |---|---|
-| Target library | `Toolbox.Algorithms` |
-| Project path | `src/Toolbox.Algorithms/Toolbox.Algorithms.csproj` |
-| Test project | `src/Toolbox.Tests/Toolbox.Tests.csproj` (shared) |
+| Target library | `DotNetToolbox.Algorithms` |
+| Project path | `src/DotNetToolbox.Algorithms/DotNetToolbox.Algorithms.csproj` |
+| Test project | `src/DotNetToolbox.Tests/DotNetToolbox.Tests.csproj` (shared) |
 | Spec | `doc/spec/Spec_Algorithms.md` |
 | NuGet deps | None (BCL only) |
 | DB required | No |
@@ -16,9 +16,9 @@
 
 ## Deliverables
 
-### `src/Toolbox.Algorithms/Sorting/TopologicalSorter.cs`
+### `src/DotNetToolbox.Algorithms/Sorting/TopologicalSorter.cs`
 
-**Class:** `public static class TopologicalSorter<T>` — namespace `Toolbox.Algorithms.Sorting`
+**Class:** `public static class TopologicalSorter<T>` — namespace `DotNetToolbox.Algorithms.Sorting`
 
 **Method:**
 ```
@@ -51,7 +51,7 @@ IReadOnlyList<T> Sort(
 
 ## Tests
 
-**File:** `src/Toolbox.Tests/Algorithms/TopologicalSorterTests.cs`
+**File:** `src/DotNetToolbox.Tests/Algorithms/TopologicalSorterTests.cs`
 
 ### Test Cases
 
@@ -81,7 +81,7 @@ IReadOnlyList<T> Sort(
 - [ ] `TopologicalSorter.cs` created in correct namespace and folder
 - [ ] `TopologicalSorterTests.cs` contains all 9 test cases
 - [ ] All 9 tests pass
-- [ ] `dotnet build Toolbox.sln` — zero errors, zero warnings
+- [ ] `dotnet build DotNetToolbox.sln` — zero errors, zero warnings
 - [ ] `dotnet test --filter "Category!=Integration"` — all pass
 - [ ] No missing XML doc warnings (`GenerateDocumentationFile` is enabled)
 - [ ] No Windows-specific APIs used

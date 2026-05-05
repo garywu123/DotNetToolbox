@@ -1,8 +1,8 @@
-# Toolbox — Copilot Instructions
+# DotNetToolbox — Copilot Instructions
 
 ## Project Overview
 
-Toolbox is a set of reusable .NET 8 class libraries. There is no UI code in this repo.
+DotNetToolbox is a set of reusable .NET 8 class libraries. There is no UI code in this repo.
 The primary consumer is the SyncTool WinUI 3 application (separate repo/folder).
 
 ## Language & Framework
@@ -51,9 +51,9 @@ Every public member requires XML doc:
 
 ## Dependency Rules
 
-- `Toolbox.Algorithms` — zero NuGet dependencies (BCL only)
-- `Toolbox.Data.Csv` — zero NuGet dependencies (BCL only)
-- `Toolbox.Data.SqlServer` — only `Microsoft.Data.SqlClient`
+- `DotNetToolbox.Algorithms` — zero NuGet dependencies (BCL only)
+- `DotNetToolbox.Data.Csv` — zero NuGet dependencies (BCL only)
+- `DotNetToolbox.Data.SqlServer` — only `Microsoft.Data.SqlClient`
 - **Do not add NuGet packages** without noting the reason in a comment
 
 ## Testing

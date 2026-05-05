@@ -1,8 +1,8 @@
-# Spec: Toolbox.Data.Csv
+# Spec: DotNetToolbox.Data.Csv
 
 ## Scope
 
-This spec defines the public API contract for `Toolbox.Data.Csv`.
+This spec defines the public API contract for `DotNetToolbox.Data.Csv`.
 The library has zero external dependencies and must compile on all .NET 8 platforms.
 
 **Three components, intended use order:**
@@ -15,7 +15,7 @@ The library has zero external dependencies and must compile on all .NET 8 platfo
 
 ## Component 1: `CsvLineParser`
 
-**Namespace:** `Toolbox.Data.Csv`
+**Namespace:** `DotNetToolbox.Data.Csv`
 **Type:** `public static class CsvLineParser`
 
 ### Purpose
@@ -61,7 +61,7 @@ public static string[] Parse(string line)
 
 ## Component 2: `CsvWriter`
 
-**Namespace:** `Toolbox.Data.Csv`
+**Namespace:** `DotNetToolbox.Data.Csv`
 **Types:** `public static class CsvWriter`, `public sealed class CsvWriterOptions`
 
 ### Purpose
@@ -134,7 +134,7 @@ or a carriage return. Double-quotes inside a field are escaped as `""`.
 
 ## Component 3: `CsvDataReader`
 
-**Namespace:** `Toolbox.Data.Csv`
+**Namespace:** `DotNetToolbox.Data.Csv`
 **Type:** `public sealed class CsvDataReader : IDataReader, IAsyncDisposable`
 
 ### Purpose
@@ -181,7 +181,7 @@ The following `IDataReader` members throw `NotSupportedException` because
 
 **Rationale:** `SqlBulkCopy` only calls `Read()`, `GetValue(int)`, `FieldCount`, `GetName(int)`.
 Implementing the full type-specific Get* methods would require schema knowledge that belongs in
-`Toolbox.Data.SqlServer.Coerce.DbValueCoercer`.
+`DotNetToolbox.Data.SqlServer.Coerce.DbValueCoercer`.
 
 ### Behaviour Details
 
@@ -197,7 +197,7 @@ Implementing the full type-specific Get* methods would require schema knowledge 
 ### Usage Example
 
 ```csharp
-// Used in Toolbox.Data.SqlServer SqlBulkLoader:
+// Used in DotNetToolbox.Data.SqlServer SqlBulkLoader:
 var headers = schema.Keys.OrderBy(k => columnOrdinal[k]).ToList();
 
 await using var csvReader = new CsvDataReader("import.csv", headers);

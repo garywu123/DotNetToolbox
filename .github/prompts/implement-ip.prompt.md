@@ -7,7 +7,7 @@ description: Execute one Implementation Plan document end-to-end
 
 ## Instructions
 
-You are executing a Toolbox Implementation Plan. Follow these steps exactly.
+You are executing a DotNetToolbox Implementation Plan. Follow these steps exactly.
 
 ### Step 1 — Read context
 
@@ -27,7 +27,7 @@ Apply all rules from `.github/copilot-instructions.md` and relevant `instruction
 ### Step 3 — Build
 
 ```powershell
-dotnet build Toolbox.sln
+dotnet build DotNetToolbox.sln
 ```
 
 Fix all errors and warnings before proceeding. Warnings are errors in this project.
@@ -35,7 +35,7 @@ Fix all errors and warnings before proceeding. Warnings are errors in this proje
 ### Step 4 — Run unit tests
 
 ```powershell
-dotnet test Toolbox.sln --filter "Category!=Integration"
+dotnet test DotNetToolbox.sln --filter "Category!=Integration"
 ```
 
 All tests must pass. Fix failures before moving on.
@@ -45,13 +45,19 @@ All tests must pass. Fix failures before moving on.
 If the IP includes integration tests:
 
 ```powershell
-dotnet test Toolbox.sln --filter "Category=Integration"
+dotnet test DotNetToolbox.sln --filter "Category=Integration"
 ```
 
 Requires `TOOLBOX_TEST_CONN` environment variable to be set.
 If it is not set, report which tests were skipped and why.
 
-### Step 6 — Report
+
+
+### Step 6 — Generate API doc
+After all tests pass, invoke generate-api-doc.prompt.md for this library and confirm doc/api/API_<LibraryName>.md is created or updated.
+
+
+### Step 7 — Report
 
 Summarise:
 - Files created (list)

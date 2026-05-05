@@ -1,34 +1,34 @@
-# Toolbox — Architecture Overview
+# DotNetToolbox — Architecture Overview
 
 ## Purpose
 
-Toolbox is a set of focused, reusable .NET 8 class libraries extracted from the SyncTool project.
+DotNetToolbox is a set of focused, reusable .NET 8 class libraries extracted from the SyncTool project.
 They contain no UI code and can be referenced by any .NET 8+ application.
 
 ## Library Dependency Graph
 
 ```
-Toolbox.Algorithms
+DotNetToolbox.Algorithms
 │
-└─ (used by) Toolbox.Data.SqlServer
+└─ (used by) DotNetToolbox.Data.SqlServer
                   │
-                  ├─ Toolbox.Algorithms  (FK topological ordering)
-                  └─ Toolbox.Data.Csv    (CsvDataReader for SqlBulkCopy)
+                  ├─ DotNetToolbox.Algorithms  (FK topological ordering)
+                  └─ DotNetToolbox.Data.Csv    (CsvDataReader for SqlBulkCopy)
 
-Toolbox.Data.Csv
+DotNetToolbox.Data.Csv
 │
-└─ (used by) Toolbox.Data.SqlServer  (CsvDataReader)
+└─ (used by) DotNetToolbox.Data.SqlServer  (CsvDataReader)
              SyncTool.App            (CsvWriter for export)
 ```
 
-`Toolbox.Algorithms` and `Toolbox.Data.Csv` have **zero NuGet dependencies**.
-`Toolbox.Data.SqlServer` depends only on `Microsoft.Data.SqlClient`.
+`DotNetToolbox.Algorithms` and `DotNetToolbox.Data.Csv` have **zero NuGet dependencies**.
+`DotNetToolbox.Data.SqlServer` depends only on `Microsoft.Data.SqlClient`.
 
 ## Solution Structure
 
 ```
-Toolbox/
-├── Toolbox.sln
+DotNetToolbox/
+├── DotNetToolbox.sln
 ├── AGENTS.md
 ├── doc/
 │   ├── Overview.md                 ← this file
@@ -37,23 +37,23 @@ Toolbox/
 │   │   ├── Spec_Data_Csv.md        ← API contract: CsvLineParser, CsvWriter, CsvDataReader
 │   │   └── Spec_Data_SqlServer.md  ← API contract: SchemaService, DbValueCoercer, SqlBulkLoader
 │   ├── impl/
-│   │   ├── IP_01_Algorithms.md     ← work order: code + tests for Toolbox.Algorithms
-│   │   ├── IP_02_Data_Csv.md       ← work order: code + tests for Toolbox.Data.Csv
-│   │   └── IP_03_Data_SqlServer.md ← work order: code + tests for Toolbox.Data.SqlServer
+│   │   ├── IP_01_Algorithms.md     ← work order: code + tests for DotNetToolbox.Algorithms
+│   │   ├── IP_02_Data_Csv.md       ← work order: code + tests for DotNetToolbox.Data.Csv
+│   │   └── IP_03_Data_SqlServer.md ← work order: code + tests for DotNetToolbox.Data.SqlServer
 │   └── api/                        ← generated after implementation (do not edit by hand)
 │       ├── API_Algorithms.md
 │       ├── API_Data_Csv.md
 │       └── API_Data_SqlServer.md
 └── src/
-    ├── Toolbox.Algorithms/
+    ├── DotNetToolbox.Algorithms/
     │   └── Sorting/
     │       └── TopologicalSorter.cs
-    ├── Toolbox.Data.Csv/
+    ├── DotNetToolbox.Data.Csv/
     │   ├── CsvLineParser.cs
     │   ├── CsvWriter.cs
     │   ├── CsvWriterOptions.cs
     │   └── CsvDataReader.cs
-    ├── Toolbox.Data.SqlServer/
+    ├── DotNetToolbox.Data.SqlServer/
     │   ├── Schema/
     │   │   ├── ColumnMeta.cs
     │   │   ├── ISchemaService.cs
@@ -64,7 +64,7 @@ Toolbox/
     │   │   └── SqlBulkLoader.cs
     │   └── Validation/
     │       └── SqlIdentifierValidator.cs
-    └── Toolbox.Tests/
+    └── DotNetToolbox.Tests/
         ├── Algorithms/
         │   └── TopologicalSorterTests.cs
         ├── Data.Csv/
@@ -83,14 +83,14 @@ Toolbox/
 
 ## Library Summaries
 
-### Toolbox.Algorithms
+### DotNetToolbox.Algorithms
 
 Generic graph algorithms with no runtime dependencies.
 
 **Key type:** `TopologicalSorter<T>` (static helper class)
 
 ```csharp
-using Toolbox.Algorithms.Sorting;
+using DotNetToolbox.Algorithms.Sorting;
 
 var tables = new[] { "Orders", "Customers", "Items" };
 var fks    = new[] { ("Orders", "Customers"), ("Orders", "Items") };
@@ -103,7 +103,7 @@ Use when you need to order entities by dependency (FK delete order, task sequenc
 
 ---
 
-### Toolbox.Data.Csv
+### DotNetToolbox.Data.Csv
 
 RFC 4180 compliant CSV parsing and writing with zero external dependencies.
 
@@ -116,7 +116,7 @@ RFC 4180 compliant CSV parsing and writing with zero external dependencies.
 | `CsvDataReader` | Stream a CSV file as `IDataReader` (for `SqlBulkCopy`) |
 
 ```csharp
-using Toolbox.Data.Csv;
+using DotNetToolbox.Data.Csv;
 
 // Write
 var options = new CsvWriterOptions { DateTimeFormat = "yyyy-MM-dd HH:mm:ss.fffffff" };
@@ -129,7 +129,7 @@ await using var reader = new CsvDataReader("input.csv", headers);
 
 ---
 
-### Toolbox.Data.SqlServer
+### DotNetToolbox.Data.SqlServer
 
 SQL Server schema inspection, schema-first type coercion, and high-throughput bulk loading.
 
@@ -143,9 +143,9 @@ SQL Server schema inspection, schema-first type coercion, and high-throughput bu
 | `SqlIdentifierValidator` | Validate and quote SQL identifiers; blocks injection |
 
 ```csharp
-using Toolbox.Data.SqlServer.Schema;
-using Toolbox.Data.SqlServer.Coerce;
-using Toolbox.Data.SqlServer.Bulk;
+using DotNetToolbox.Data.SqlServer.Schema;
+using DotNetToolbox.Data.SqlServer.Coerce;
+using DotNetToolbox.Data.SqlServer.Bulk;
 
 var schemaSvc = new SchemaService();
 var schema    = await schemaSvc.GetColumnMapAsync(conn, "dbo.HistoricalVehicles");
@@ -162,7 +162,7 @@ await SqlBulkLoader.LoadAsync(conn, txn, "dbo.HistoricalVehicles",
 
 ## Test Project Layout
 
-All libraries share a single test project `Toolbox.Tests`. Tests are organised by library in subfolders.
+All libraries share a single test project `DotNetToolbox.Tests`. Tests are organised by library in subfolders.
 
 Integration tests are isolated by `[Trait("Category", "Integration")]` and require the `TOOLBOX_TEST_CONN`
 environment variable pointing to a SQL Server Developer Edition or LocalDB instance.

@@ -7,16 +7,16 @@ description: Generate API reference documentation from implemented source code
 
 ## Instructions
 
-Generate an API reference document for a completed Toolbox library.
+Generate an API reference document for a completed DotNetToolbox library.
 The output file goes in `doc/api/` and must be suitable for calling code (consumers of the library).
 
 ### Step 1 — Identify source
 
 Determine which library to document from the user's request or the current context:
 
-- `Toolbox.Algorithms` → source in `src/Toolbox.Algorithms/`
-- `Toolbox.Data.Csv` → source in `src/Toolbox.Data.Csv/`
-- `Toolbox.Data.SqlServer` → source in `src/Toolbox.Data.SqlServer/`
+- `DotNetToolbox.Algorithms` → source in `src/DotNetToolbox.Algorithms/`
+- `DotNetToolbox.Data.Csv` → source in `src/DotNetToolbox.Data.Csv/`
+- `DotNetToolbox.Data.SqlServer` → source in `src/DotNetToolbox.Data.SqlServer/`
 
 ### Step 2 — Read source files
 

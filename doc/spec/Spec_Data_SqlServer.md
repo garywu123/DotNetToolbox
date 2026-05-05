@@ -1,9 +1,9 @@
-# Spec: Toolbox.Data.SqlServer
+# Spec: DotNetToolbox.Data.SqlServer
 
 ## Scope
 
-This spec defines the public API contract for `Toolbox.Data.SqlServer`.
-The library depends on `Toolbox.Algorithms` (FK ordering) and `Toolbox.Data.Csv` (bulk load streaming).
+This spec defines the public API contract for `DotNetToolbox.Data.SqlServer`.
+The library depends on `DotNetToolbox.Algorithms` (FK ordering) and `DotNetToolbox.Data.Csv` (bulk load streaming).
 
 **Four components:**
 
@@ -17,7 +17,7 @@ The library depends on `Toolbox.Algorithms` (FK ordering) and `Toolbox.Data.Csv`
 
 ## Component 1: `SqlIdentifierValidator`
 
-**Namespace:** `Toolbox.Data.SqlServer.Validation`
+**Namespace:** `DotNetToolbox.Data.SqlServer.Validation`
 **Type:** `public static class SqlIdentifierValidator`
 
 ### Purpose
@@ -74,7 +74,7 @@ Valid schema-qualified: up to two `.`-separated parts, each matching one of the 
 
 ## Component 2: `ColumnMeta`
 
-**Namespace:** `Toolbox.Data.SqlServer.Schema`
+**Namespace:** `DotNetToolbox.Data.SqlServer.Schema`
 **Type:** `public sealed record ColumnMeta`
 
 ### Purpose
@@ -104,7 +104,7 @@ public sealed record ColumnMeta(
 
 ## Component 3: `SchemaService`
 
-**Namespace:** `Toolbox.Data.SqlServer.Schema`
+**Namespace:** `DotNetToolbox.Data.SqlServer.Schema`
 **Types:** `public interface ISchemaService`, `public sealed class SchemaService : ISchemaService`
 
 ### Purpose
@@ -166,7 +166,7 @@ Cache key is `$"{connection.ConnectionString}::{tableName.ToUpperInvariant()}"`.
 
 ## Component 4: `DbValueCoercer`
 
-**Namespace:** `Toolbox.Data.SqlServer.Coerce`
+**Namespace:** `DotNetToolbox.Data.SqlServer.Coerce`
 **Type:** `public static class DbValueCoercer`
 
 ### Purpose
@@ -229,7 +229,7 @@ schema, not the target table's schema. The staging table definition may differ f
 
 ## Component 5: `SqlBulkLoader`
 
-**Namespace:** `Toolbox.Data.SqlServer.Bulk`
+**Namespace:** `DotNetToolbox.Data.SqlServer.Bulk`
 **Type:** `public static class SqlBulkLoader`
 
 ### Purpose

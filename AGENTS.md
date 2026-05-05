@@ -2,7 +2,7 @@
 
 ## Project
 
-Toolbox — a collection of reusable .NET 8 class libraries for internal tooling projects.
+DotNetToolbox — a collection of reusable .NET 8 class libraries for internal tooling projects.
 
 Primary consumer: **SyncTool** (WinUI 3 app for SGVM reporting database sync).
 
@@ -10,9 +10,9 @@ Primary consumer: **SyncTool** (WinUI 3 app for SGVM reporting database sync).
 
 | Library | Purpose | Dependencies |
 |---|---|---|
-| `Toolbox.Algorithms` | Generic graph algorithms (topological sort) | None |
-| `Toolbox.Data.Csv` | Type-safe CSV reading and writing | None |
-| `Toolbox.Data.SqlServer` | SQL Server schema inspection, type coercion, bulk loading | `Toolbox.Algorithms` |
+| `DotNetToolbox.Algorithms` | Generic graph algorithms (topological sort) | None |
+| `DotNetToolbox.Data.Csv` | Type-safe CSV reading and writing | None |
+| `DotNetToolbox.Data.SqlServer` | SQL Server schema inspection, type coercion, bulk loading | `DotNetToolbox.Algorithms` |
 
 ## Where To Look First
 
@@ -26,16 +26,16 @@ Primary consumer: **SyncTool** (WinUI 3 app for SGVM reporting database sync).
 
 ```powershell
 # Build entire solution
-dotnet build Toolbox.sln
+dotnet build DotNetToolbox.sln
 
 # Run all unit tests (no DB required)
-dotnet test Toolbox.sln --filter "Category!=Integration"
+dotnet test DotNetToolbox.sln --filter "Category!=Integration"
 
 # Run integration tests (requires SQL Server — set TOOLBOX_TEST_CONN first)
-dotnet test Toolbox.sln --filter "Category=Integration"
+dotnet test DotNetToolbox.sln --filter "Category=Integration"
 
 # Run everything
-dotnet test Toolbox.sln
+dotnet test DotNetToolbox.sln
 ```
 
 ## Environment Variables
@@ -66,7 +66,7 @@ IP_01_Algorithms  →  IP_02_Data_Csv  →  IP_03_Data_SqlServer
 |---|---|
 | Implementing a new feature | Read `doc/spec/Spec_*.md` first, then `doc/impl/IP_*.md` |
 | Fixing a bug | Read `doc/api/API_*.md` for the contract, locate source in `src/` |
-| Adding tests | Follow patterns in `src/Toolbox.Tests/` |
+| Adding tests | Follow patterns in `src/DotNetToolbox.Tests/` |
 | Understanding a library's public API | Read `doc/api/API_*.md` |
 | Reviewing architecture | Read `doc/Overview.md` |
 
@@ -76,8 +76,8 @@ IP_01_Algorithms  →  IP_02_Data_Csv  →  IP_03_Data_SqlServer
 - **No hardcoded connection strings** in source — use the `TOOLBOX_TEST_CONN` environment variable in tests
 - Every public method must have **at least one unit test**
 - Use `TryParse` patterns — **never exception-driven type detection**
-- `Toolbox.Algorithms` and `Toolbox.Data.Csv` must be **cross-platform** — no Windows-specific APIs, no P/Invoke
-- `Toolbox.Data.SqlServer` targets `net8.0` (not `net8.0-windows`) but may use `Microsoft.Data.SqlClient`
+- `DotNetToolbox.Algorithms` and `DotNetToolbox.Data.Csv` must be **cross-platform** — no Windows-specific APIs, no P/Invoke
+- `DotNetToolbox.Data.SqlServer` targets `net8.0` (not `net8.0-windows`) but may use `Microsoft.Data.SqlClient`
 - Treat warnings as errors — `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` is set in all projects
 - Nullable reference types are enabled — no `#nullable disable`
 

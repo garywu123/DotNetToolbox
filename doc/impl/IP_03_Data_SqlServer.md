@@ -1,12 +1,12 @@
-# IP-03: Toolbox.Data.SqlServer
+# IP-03: DotNetToolbox.Data.SqlServer
 
 ## Overview
 
 | Item | Value |
 |---|---|
-| Target library | `Toolbox.Data.SqlServer` |
-| Project path | `src/Toolbox.Data.SqlServer/Toolbox.Data.SqlServer.csproj` |
-| Test project | `src/Toolbox.Tests/Toolbox.Tests.csproj` (shared) |
+| Target library | `DotNetToolbox.Data.SqlServer` |
+| Project path | `src/DotNetToolbox.Data.SqlServer/DotNetToolbox.Data.SqlServer.csproj` |
+| Test project | `src/DotNetToolbox.Tests/DotNetToolbox.Tests.csproj` (shared) |
 | Spec | `doc/spec/Spec_Data_SqlServer.md` |
 | NuGet deps | `Microsoft.Data.SqlClient` 5.* |
 | DB required | Integration tests only (`TOOLBOX_TEST_CONN` env var) |
@@ -22,9 +22,9 @@
 
 ## Deliverables
 
-### `src/Toolbox.Data.SqlServer/Validation/SqlIdentifierValidator.cs`
+### `src/DotNetToolbox.Data.SqlServer/Validation/SqlIdentifierValidator.cs`
 
-**Class:** `public static partial class SqlIdentifierValidator` — namespace `Toolbox.Data.SqlServer.Validation`
+**Class:** `public static partial class SqlIdentifierValidator` — namespace `DotNetToolbox.Data.SqlServer.Validation`
 
 **Methods:**
 ```
@@ -52,9 +52,9 @@ string QuoteQualified(string qualifiedName) → throws ArgumentException when in
 
 ---
 
-### `src/Toolbox.Data.SqlServer/Schema/ColumnMeta.cs`
+### `src/DotNetToolbox.Data.SqlServer/Schema/ColumnMeta.cs`
 
-**Type:** `public sealed record ColumnMeta` — namespace `Toolbox.Data.SqlServer.Schema`
+**Type:** `public sealed record ColumnMeta` — namespace `DotNetToolbox.Data.SqlServer.Schema`
 
 **Positional properties:** `string TypeName`, `bool IsNullable`, `int MaxLength`, `byte Precision`, `byte Scale`
 
@@ -62,9 +62,9 @@ string QuoteQualified(string qualifiedName) → throws ArgumentException when in
 
 ---
 
-### `src/Toolbox.Data.SqlServer/Schema/ISchemaService.cs`
+### `src/DotNetToolbox.Data.SqlServer/Schema/ISchemaService.cs`
 
-**Interface:** `public interface ISchemaService` — namespace `Toolbox.Data.SqlServer.Schema`
+**Interface:** `public interface ISchemaService` — namespace `DotNetToolbox.Data.SqlServer.Schema`
 
 **Methods:**
 ```
@@ -76,9 +76,9 @@ void ClearCache()
 
 ---
 
-### `src/Toolbox.Data.SqlServer/Schema/SchemaService.cs`
+### `src/DotNetToolbox.Data.SqlServer/Schema/SchemaService.cs`
 
-**Class:** `public sealed class SchemaService : ISchemaService` — namespace `Toolbox.Data.SqlServer.Schema`
+**Class:** `public sealed class SchemaService : ISchemaService` — namespace `DotNetToolbox.Data.SqlServer.Schema`
 
 **Responsibilities:**
 - Hold a `ConcurrentDictionary` keyed by `"{connectionString}::{tableName.ToUpperInvariant()}"`
@@ -100,9 +100,9 @@ void ClearCache()
 
 ---
 
-### `src/Toolbox.Data.SqlServer/Coerce/DbValueCoercer.cs`
+### `src/DotNetToolbox.Data.SqlServer/Coerce/DbValueCoercer.cs`
 
-**Class:** `public static class DbValueCoercer` — namespace `Toolbox.Data.SqlServer.Coerce`
+**Class:** `public static class DbValueCoercer` — namespace `DotNetToolbox.Data.SqlServer.Coerce`
 
 **Method:**
 ```
@@ -133,9 +133,9 @@ object Coerce(string columnName, string? raw, IReadOnlyDictionary<string, Column
 
 ---
 
-### `src/Toolbox.Data.SqlServer/Bulk/SqlBulkLoader.cs`
+### `src/DotNetToolbox.Data.SqlServer/Bulk/SqlBulkLoader.cs`
 
-**Class:** `public static class SqlBulkLoader` — namespace `Toolbox.Data.SqlServer.Bulk`
+**Class:** `public static class SqlBulkLoader` — namespace `DotNetToolbox.Data.SqlServer.Bulk`
 
 **Method:**
 ```
@@ -176,7 +176,7 @@ Task LoadAsync(
 
 ## Test Setup
 
-**File:** `src/Toolbox.Tests/TestHelpers/TestSchema.sql`
+**File:** `src/DotNetToolbox.Tests/TestHelpers/TestSchema.sql`
 
 Run once against the test DB (or auto-apply in `SqlServerFixture.InitializeAsync`):
 
@@ -199,7 +199,7 @@ CREATE TABLE dbo.TestDimTable (
 );
 ```
 
-**File:** `src/Toolbox.Tests/TestHelpers/SqlServerFixture.cs`
+**File:** `src/DotNetToolbox.Tests/TestHelpers/SqlServerFixture.cs`
 
 **Class:** `public sealed class SqlServerFixture : IAsyncLifetime`
 
@@ -213,7 +213,7 @@ CREATE TABLE dbo.TestDimTable (
 
 ## Tests
 
-### Unit: `src/Toolbox.Tests/Data.SqlServer/DbValueCoercerTests.cs`
+### Unit: `src/DotNetToolbox.Tests/Data.SqlServer/DbValueCoercerTests.cs`
 
 Test helper — build a single-column schema inline:
 ```
@@ -239,7 +239,7 @@ Schema(colName, typeName) → Dictionary<string, ColumnMeta> with one entry
 | 15 | `Coerce_UnknownColumn_ReturnsRawString` | (not in schema) | `"anything"` | `"anything"` |
 | 16 | `Coerce_IntColumn_InvalidRaw_ReturnsRawString` | `int` | `"not-a-number"` | `"not-a-number"` |
 
-### Unit: `src/Toolbox.Tests/Data.SqlServer/SqlIdentifierValidatorTests.cs`
+### Unit: `src/DotNetToolbox.Tests/Data.SqlServer/SqlIdentifierValidatorTests.cs`
 
 | # | Test Name | Input | Expected |
 |---|---|---|---|
@@ -255,7 +255,7 @@ Schema(colName, typeName) → Dictionary<string, ColumnMeta> with one entry
 | 10 | `QuoteQualified_TwoParts_QuotesBoth` | `"dbo.HistoricalVehicles"` | `"[dbo].[HistoricalVehicles]"` |
 | 11 | `Quote_InvalidIdentifier_ThrowsArgumentException` | `"a;b"` | throws `ArgumentException` |
 
-### Integration: `src/Toolbox.Tests/Data.SqlServer/Integration/SchemaServiceIntegrationTests.cs`
+### Integration: `src/DotNetToolbox.Tests/Data.SqlServer/Integration/SchemaServiceIntegrationTests.cs`
 
 All marked `[Trait("Category", "Integration")]`. Use `IClassFixture<SqlServerFixture>`.
 
@@ -268,7 +268,7 @@ All marked `[Trait("Category", "Integration")]`. Use `IClassFixture<SqlServerFix
 | 5 | `GetColumnMapAsync_CalledTwice_ReturnsSameReference` | second call returns reference-equal result (cache hit) |
 | 6 | `ClearCache_ThenCall_ReturnsFreshResult` | after `ClearCache()`, next call re-queries and returns a new dict reference |
 
-### Integration: `src/Toolbox.Tests/Data.SqlServer/Integration/SqlBulkLoaderIntegrationTests.cs`
+### Integration: `src/DotNetToolbox.Tests/Data.SqlServer/Integration/SqlBulkLoaderIntegrationTests.cs`
 
 All marked `[Trait("Category", "Integration")]`. Use `IClassFixture<SqlServerFixture>`.
 Each test must clean up (`DELETE FROM dbo.TestDimTable WHERE CustomerId = 'TEST'`) in `IAsyncLifetime.DisposeAsync`.
@@ -287,7 +287,7 @@ Each test must clean up (`DELETE FROM dbo.TestDimTable WHERE CustomerId = 'TEST'
 - [ ] All 6 source files created in correct namespace subfolders
 - [ ] `TestSchema.sql` and `SqlServerFixture.cs` created in `TestHelpers/`
 - [ ] Unit tests (27 cases): all pass without a DB connection
-- [ ] `dotnet build Toolbox.sln` — zero errors, zero warnings
+- [ ] `dotnet build DotNetToolbox.sln` — zero errors, zero warnings
 - [ ] `dotnet test --filter "Category!=Integration"` — all pass
 - [ ] Integration tests (10 cases): all pass when `TOOLBOX_TEST_CONN` is set
 

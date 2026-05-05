@@ -1,12 +1,12 @@
-# IP-02: Toolbox.Data.Csv
+# IP-02: DotNetToolbox.Data.Csv
 
 ## Overview
 
 | Item | Value |
 |---|---|
-| Target library | `Toolbox.Data.Csv` |
-| Project path | `src/Toolbox.Data.Csv/Toolbox.Data.Csv.csproj` |
-| Test project | `src/Toolbox.Tests/Toolbox.Tests.csproj` (shared) |
+| Target library | `DotNetToolbox.Data.Csv` |
+| Project path | `src/DotNetToolbox.Data.Csv/DotNetToolbox.Data.Csv.csproj` |
+| Test project | `src/DotNetToolbox.Tests/DotNetToolbox.Tests.csproj` (shared) |
 | Spec | `doc/spec/Spec_Data_Csv.md` |
 | NuGet deps | None (BCL only) |
 | DB required | No |
@@ -22,9 +22,9 @@
 
 ## Deliverables
 
-### `src/Toolbox.Data.Csv/CsvLineParser.cs`
+### `src/DotNetToolbox.Data.Csv/CsvLineParser.cs`
 
-**Class:** `public static class CsvLineParser` — namespace `Toolbox.Data.Csv`
+**Class:** `public static class CsvLineParser` — namespace `DotNetToolbox.Data.Csv`
 
 **Method:** `public static string[] Parse(string line)`
 
@@ -48,9 +48,9 @@
 
 ---
 
-### `src/Toolbox.Data.Csv/CsvWriterOptions.cs`
+### `src/DotNetToolbox.Data.Csv/CsvWriterOptions.cs`
 
-**Class:** `public sealed class CsvWriterOptions` — namespace `Toolbox.Data.Csv`
+**Class:** `public sealed class CsvWriterOptions` — namespace `DotNetToolbox.Data.Csv`
 
 **Properties (all `init`-only with defaults):**
 
@@ -62,9 +62,9 @@
 
 ---
 
-### `src/Toolbox.Data.Csv/CsvWriter.cs`
+### `src/DotNetToolbox.Data.Csv/CsvWriter.cs`
 
-**Class:** `public static class CsvWriter` — namespace `Toolbox.Data.Csv`
+**Class:** `public static class CsvWriter` — namespace `DotNetToolbox.Data.Csv`
 
 **Methods:**
 
@@ -98,9 +98,9 @@ Task WriteFromReaderAsync(string path, IDataReader reader,
 
 ---
 
-### `src/Toolbox.Data.Csv/CsvDataReader.cs`
+### `src/DotNetToolbox.Data.Csv/CsvDataReader.cs`
 
-**Class:** `public sealed class CsvDataReader : IDataReader, IAsyncDisposable` — namespace `Toolbox.Data.Csv`
+**Class:** `public sealed class CsvDataReader : IDataReader, IAsyncDisposable` — namespace `DotNetToolbox.Data.Csv`
 
 **Constructor:** `CsvDataReader(string path, IReadOnlyList<string> expectedHeaders)`
 
@@ -129,7 +129,7 @@ Task WriteFromReaderAsync(string path, IDataReader reader,
 
 ## Tests
 
-### Test class: `src/Toolbox.Tests/Data.Csv/CsvLineParserTests.cs`
+### Test class: `src/DotNetToolbox.Tests/Data.Csv/CsvLineParserTests.cs`
 
 | # | Test Name | Input | Expected |
 |---|---|---|---|
@@ -141,7 +141,7 @@ Task WriteFromReaderAsync(string path, IDataReader reader,
 | 6 | `Parse_QuotedEmptyField_ReturnsEmptyString` | `"\"\""` | `[""]` |
 | 7 | `Parse_NullInput_ThrowsArgumentNull` | `null` | throws `ArgumentNullException` |
 
-### Test class: `src/Toolbox.Tests/Data.Csv/CsvWriterTests.cs`
+### Test class: `src/DotNetToolbox.Tests/Data.Csv/CsvWriterTests.cs`
 
 | # | Test Name | Scenario |
 |---|---|---|
@@ -153,7 +153,7 @@ Task WriteFromReaderAsync(string path, IDataReader reader,
 | 6 | `WriteAsync_EmptyRows_WritesOnlyHeader` | zero rows → file contains only header line |
 | 7 | `WriteAsync_CustomDateTimeFormat_Applied` | Options with format `"yyyy-MM-dd"` applied to DateTime |
 
-### Test class: `src/Toolbox.Tests/Data.Csv/CsvDataReaderTests.cs`
+### Test class: `src/DotNetToolbox.Tests/Data.Csv/CsvDataReaderTests.cs`
 
 | # | Test Name | Scenario |
 |---|---|---|
@@ -174,6 +174,6 @@ Test helper: write a temp CSV to a `Path.GetTempFileName()` file, read with `Csv
 
 - [ ] `CsvLineParser.cs`, `CsvWriterOptions.cs`, `CsvWriter.cs`, `CsvDataReader.cs` created
 - [ ] All test classes and cases implemented and passing
-- [ ] `dotnet build Toolbox.sln` — zero errors, zero warnings
+- [ ] `dotnet build DotNetToolbox.sln` — zero errors, zero warnings
 - [ ] `dotnet test --filter "Category!=Integration"` — all pass
 - [ ] Cross-platform: no Windows-specific APIs used (verify with `dotnet build -r linux-x64`)

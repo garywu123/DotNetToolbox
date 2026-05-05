@@ -1,16 +1,16 @@
 ---
-applyTo: "src/Toolbox.*/**/*.cs"
+applyTo: "src/DotNetToolbox.*/**/*.cs"
 ---
 
 ## Library Source Rules
 
 ### Platform Targeting
 
-- `Toolbox.Algorithms` and `Toolbox.Data.Csv`: **must be cross-platform**
+- `DotNetToolbox.Algorithms` and `DotNetToolbox.Data.Csv`: **must be cross-platform**
   - No `System.Runtime.InteropServices` P/Invoke
   - No Windows registry, DPAPI, or Windows-specific paths
   - No `Environment.SpecialFolder` that returns empty on non-Windows
-- `Toolbox.Data.SqlServer`: may use `Microsoft.Data.SqlClient` (cross-platform client)
+- `DotNetToolbox.Data.SqlServer`: may use `Microsoft.Data.SqlClient` (cross-platform client)
 
 ### Public API Design
 

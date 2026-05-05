@@ -1,15 +1,15 @@
-# Spec: Toolbox.Algorithms
+# Spec: DotNetToolbox.Algorithms
 
 ## Scope
 
-This spec defines the public API contract for `Toolbox.Algorithms`.
+This spec defines the public API contract for `DotNetToolbox.Algorithms`.
 The library has zero external dependencies and must compile on all .NET 8 platforms.
 
 ---
 
 ## Component: `TopologicalSorter<T>`
 
-**Namespace:** `Toolbox.Algorithms.Sorting`
+**Namespace:** `DotNetToolbox.Algorithms.Sorting`
 **Type:** `public static class TopologicalSorter<T>`
 
 ### Purpose
