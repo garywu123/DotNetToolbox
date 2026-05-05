@@ -8,4 +8,13 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DotNetToolbox.Algorithms\DotNetToolbox.Algorithms.csproj" />
+    <ProjectReference Include="..\DotNetToolbox.Data.Csv\DotNetToolbox.Data.Csv.csproj" />
+  </ItemGroup>
+
 </Project>

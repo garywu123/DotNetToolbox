@@ -28,7 +28,8 @@ DotNetToolbox.Data.Csv
 
 ```
 DotNetToolbox/
-├── DotNetToolbox.sln
+├── DotNetToolbox.slnx
+├── DotNetToolbox.sln                 ← optional (when created)
 ├── AGENTS.md
 ├── doc/
 │   ├── Overview.md                 ← this file
@@ -44,41 +45,40 @@ DotNetToolbox/
 │       ├── API_Algorithms.md
 │       ├── API_Data_Csv.md
 │       └── API_Data_SqlServer.md
-└── src/
-    ├── DotNetToolbox.Algorithms/
-    │   └── Sorting/
-    │       └── TopologicalSorter.cs
-    ├── DotNetToolbox.Data.Csv/
-    │   ├── CsvLineParser.cs
-    │   ├── CsvWriter.cs
-    │   ├── CsvWriterOptions.cs
-    │   └── CsvDataReader.cs
-    ├── DotNetToolbox.Data.SqlServer/
-    │   ├── Schema/
-    │   │   ├── ColumnMeta.cs
-    │   │   ├── ISchemaService.cs
-    │   │   └── SchemaService.cs
-    │   ├── Coerce/
-    │   │   └── DbValueCoercer.cs
-    │   ├── Bulk/
-    │   │   └── SqlBulkLoader.cs
-    │   └── Validation/
-    │       └── SqlIdentifierValidator.cs
-    └── DotNetToolbox.Tests/
-        ├── Algorithms/
-        │   └── TopologicalSorterTests.cs
-        ├── Data.Csv/
-        │   ├── CsvLineParserTests.cs
-        │   ├── CsvWriterTests.cs
-        │   └── CsvDataReaderTests.cs
-        ├── Data.SqlServer/
-        │   ├── DbValueCoercerTests.cs
-        │   ├── SqlIdentifierValidatorTests.cs
-        │   └── Integration/
-        │       ├── SchemaServiceIntegrationTests.cs
-        │       └── SqlBulkLoaderIntegrationTests.cs
-        └── TestHelpers/
-            └── SqlServerFixture.cs
+├── DotNetToolbox.Algorithms/
+│   └── Sorting/
+│       └── TopologicalSorter.cs
+├── DotNetToolbox.Data.Csv/
+│   ├── CsvLineParser.cs
+│   ├── CsvWriter.cs
+│   ├── CsvWriterOptions.cs
+│   └── CsvDataReader.cs
+├── DotNetToolbox.Data.SqlServer/
+│   ├── Schema/
+│   │   ├── ColumnMeta.cs
+│   │   ├── ISchemaService.cs
+│   │   └── SchemaService.cs
+│   ├── Coerce/
+│   │   └── DbValueCoercer.cs
+│   ├── Bulk/
+│   │   └── SqlBulkLoader.cs
+│   └── Validation/
+│       └── SqlIdentifierValidator.cs
+└── DotNetToolbox.Tests/
+    ├── Algorithms/
+    │   └── TopologicalSorterTests.cs
+    ├── Data.Csv/
+    │   ├── CsvLineParserTests.cs
+    │   ├── CsvWriterTests.cs
+    │   └── CsvDataReaderTests.cs
+    ├── Data.SqlServer/
+    │   ├── DbValueCoercerTests.cs
+    │   ├── SqlIdentifierValidatorTests.cs
+    │   └── Integration/
+    │       ├── SchemaServiceIntegrationTests.cs
+    │       └── SqlBulkLoaderIntegrationTests.cs
+    └── TestHelpers/
+        └── SqlServerFixture.cs
 ```
 
 ## Library Summaries
