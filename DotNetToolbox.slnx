@@ -1,4 +1,6 @@
 <Solution>
-  <Folder Name="/doc/" />
+  <Folder Name="/doc/">
+    <File Path="doc/Overview.md" />
+  </Folder>
   <Project Path="DotNetToolbox.Data.Csv/DotNetToolbox.Data.Csv.csproj" />
 </Solution>
