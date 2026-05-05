@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DotNetToolbox.Algorithms\DotNetToolbox.Algorithms.csproj" />
+    <ProjectReference Include="..\DotNetToolbox.Data.Csv\DotNetToolbox.Data.Csv.csproj" />
   </ItemGroup>
 
 </Project>
