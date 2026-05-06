@@ -9,15 +9,15 @@ public class DbValueCoercerTests
 {
     private readonly IReadOnlyDictionary<string, ColumnMeta> _schema = new Dictionary<string, ColumnMeta>(StringComparer.OrdinalIgnoreCase)
     {
-        ["IntCol"] = new("int", true, 4, 0, 0),
-        ["BigCol"] = new("bigint", true, 8, 0, 0),
-        ["BitCol"] = new("bit", true, 1, 0, 0),
-        ["DecCol"] = new("decimal", true, 0, 18, 4),
-        ["Dt2Col"] = new("datetime2", true, 0, 0, 0),
-        ["DateCol"] = new("date", true, 0, 0, 0),
-        ["GuidCol"] = new("uniqueidentifier", true, 0, 0, 0),
-        ["VarCol"] = new("varchar", true, 100, 0, 0),
-        ["NVarCol"] = new("nvarchar", true, 200, 0, 0),
+        ["IntCol"] = new ColumnMeta("int", true, 4, 0, 0),
+        ["BigCol"] = new ColumnMeta("bigint", true, 8, 0, 0),
+        ["BitCol"] = new ColumnMeta("bit", true, 1, 0, 0),
+        ["DecCol"] = new ColumnMeta("decimal", true, 0, 18, 4),
+        ["Dt2Col"] = new ColumnMeta("datetime2", true, 0, 0, 0),
+        ["DateCol"] = new ColumnMeta("date", true, 0, 0, 0),
+        ["GuidCol"] = new ColumnMeta("uniqueidentifier", true, 0, 0, 0),
+        ["VarCol"] = new ColumnMeta("varchar", true, 100, 0, 0),
+        ["NVarCol"] = new ColumnMeta("nvarchar", true, 200, 0, 0),
     };
 
     [Fact]
