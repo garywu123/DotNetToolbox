@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+DotNetToolbox.Algorithms/DotNetToolbox.Algorithms.csproj.lscache
+DotNetToolbox.Data.Csv/DotNetToolbox.Data.Csv.csproj.lscache
+DotNetToolbox.Data.SqlServer/DotNetToolbox.Data.SqlServer.csproj.lscache
+DotNetToolbox.Tests/DotNetToolbox.Tests.csproj.lscache
