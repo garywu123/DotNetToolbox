@@ -12,14 +12,14 @@ An operator can manually publish one versioned, private preview of the three Dot
 
 ## Scope
 
-**In:** Package metadata, one manual preview release, exact consumer references, and version-tagged API-document access.
+**In:** Package metadata, one manual preview release, a repository README, exact consumer references, and version-tagged API-document access.
 
 **Out:** GitHub Actions automation, a documentation web site, and stable-package release policy.
 
 ## Implementation
 
-1. Add minimal package metadata to the three library projects; retain compiler XML documentation and current `doc/api` reference files.
-2. Build, test, pack, and inspect the preview packages locally; then manually push them with the operator's GitHub Packages credentials.
+1. Add minimal package metadata and a repository README; retain compiler XML documentation and current `doc/api` reference files.
+2. Build, test, pack, and inspect the preview packages locally; then manually push them with the operator's GitHub Packages credentials. Completed manually for `0.1.0-etl-runner.1`; tag pushed.
 3. Tag the same committed source, configure the consumer's private source locally, and restore exact preview versions without project references.
 
 ## Happy Paths
