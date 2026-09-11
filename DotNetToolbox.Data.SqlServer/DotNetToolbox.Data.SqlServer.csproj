@@ -6,6 +6,11 @@
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>GaryWu123.DotNetToolbox.Data.SqlServer</PackageId>
+    <Authors>Gary Wu</Authors>
+    <Description>SQL Server schema inspection, coercion, and bulk loading for internal .NET tools.</Description>
+    <RepositoryUrl>https://github.com/garywu123/DotNetToolbox</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
