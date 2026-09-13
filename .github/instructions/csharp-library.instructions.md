@@ -1,5 +1,5 @@
 ---
-applyTo: "src/DotNetToolbox.*/**/*.cs"
+applyTo: "DotNetToolbox.*/**/*.cs"
 ---
 
 ## Library Source Rules
