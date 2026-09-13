@@ -3,7 +3,115 @@
 ## Scope
 
 This spec defines the public API contract for `DotNetToolbox.Algorithms`.
-The library has zero external dependencies and must compile on all .NET 8 platforms.
+The library has zero external dependencies and must compile on all .NET 8 and .NET 10 platforms.
+
+---
+
+## Component: Geometry / Clothoid F01
+
+**Namespace:** `DotNetToolbox.Algorithms.Geometry`
+
+### Purpose and boundary
+
+Evaluates a clothoid when its start pose, length, initial curvature, and curvature
+rate are already known. This component is geometry-only: `Pose2D.TangentAngle`
+is the directed path tangent. Converting a vehicle body heading and forward/reverse
+state into that tangent belongs in a vehicle adapter, not this library.
+
+Endpoint fitting, root selection, vehicle constraints, and production-grade
+Fresnel evaluation are outside F01.
+
+### Public types
+
+```csharp
+public readonly record struct Pose2D(double X, double Y, double TangentAngle);
+
+public readonly record struct ClothoidParameters(
+    Pose2D StartPose,
+    double Length,
+    double InitialCurvature,
+    double CurvatureRate);
+
+public readonly record struct PathSample(
+    double Distance,
+    double X,
+    double Y,
+    double TangentAngle,
+    double Curvature);
+```
+
+Distances and coordinates are metres, tangents are radians, curvature is
+inverse metres, and curvature rate is inverse square metres.
+
+### Angle operations
+
+`Angles` exposes `DegreesToRadians`, `RadiansToDegrees`, and `NormalizeRadians`.
+Normalization returns the equivalent angle in the half-open interval
+`[-pi, pi)`. Every numeric argument must be finite.
+
+### Clothoid evaluation
+
+```csharp
+public static double CurvatureAt(
+    double distance,
+    double initialCurvature,
+    double curvatureRate);
+
+public static double TangentAt(
+    double distance,
+    double initialTangent,
+    double initialCurvature,
+    double curvatureRate);
+
+public static IReadOnlyList<PathSample> Sample(
+    ClothoidParameters parameters,
+    double stepLength);
+```
+
+The exact scalar relationships are:
+
+```text
+curvature(s) = initialCurvature + curvatureRate * s
+tangent(s)   = initialTangent + initialCurvature * s
+             + 0.5 * curvatureRate * s^2
+```
+
+`Sample` uses midpoint integration for XY coordinates. Its result contains the
+start and the exact requested endpoint; intermediate spacing is at most
+`stepLength`. Zero length returns only the start sample.
+
+All numeric inputs must be finite. Evaluation distance and total length must be
+non-negative. Step length must be positive and large enough to advance the
+floating-point distance. Violations throw `ArgumentOutOfRangeException` before
+a result is returned.
+
+---
+
+## Component: Geometry / Canonical G1 Clothoid Fitting
+
+**Namespace:** `DotNetToolbox.Algorithms.Geometry`
+
+`ClothoidFitter.TryFitG1` accepts two `Pose2D` values whose angles are directed
+path tangents. It returns the relevant Bertolazzi-Frego single-clothoid candidate
+or `false` with a `G1FitFailure`; it does not enumerate all mathematical roots.
+
+```csharp
+public static bool TryFitG1(
+    Pose2D startPose,
+    Pose2D endPose,
+    out G1FitCandidate candidate,
+    out G1FitFailure failure);
+```
+
+Finite-value violations throw `ArgumentOutOfRangeException`. Coincident endpoints,
+unsafe Newton updates, non-convergence, invalid recovered length, and excessive
+endpoint residuals return a named failure without a partial candidate.
+
+The dependency-free implementation uses 2048-panel composite Simpson quadrature
+over the normalized interval and bounded Newton iteration. This is the deterministic
+offline implementation contract; it does not claim the full asymptotic accuracy of
+the reference Fresnel implementation. Vehicle body-heading and travel-direction
+conversion remains the responsibility of a vehicle-specific adapter.
 
 ---
 

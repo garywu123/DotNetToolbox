@@ -2,8 +2,8 @@
 
 ## Purpose
 
-DotNetToolbox is a set of focused, reusable .NET 8 class libraries extracted from the SyncTool project.
-They contain no UI code and can be referenced by any .NET 8+ application.
+DotNetToolbox is a set of focused, reusable .NET class libraries extracted from internal projects.
+They contain no UI code. `DotNetToolbox.Algorithms` and its tests target .NET 8 and .NET 10.
 
 ## Library Dependency Graph
 
@@ -46,6 +46,12 @@ DotNetToolbox/
 │       ├── API_Data_Csv.md
 │       └── API_Data_SqlServer.md
 ├── DotNetToolbox.Algorithms/
+│   ├── Geometry/
+│   │   ├── Angles.cs
+│   │   ├── ClothoidEvaluator.cs
+│   │   ├── ClothoidFitter.cs
+│   │   ├── G1FitTypes.cs
+│   │   └── GeometryTypes.cs
 │   └── Sorting/
 │       └── TopologicalSorter.cs
 ├── DotNetToolbox.Data.Csv/
@@ -66,6 +72,8 @@ DotNetToolbox/
 │       └── SqlIdentifierValidator.cs
 └── DotNetToolbox.Tests/
     ├── Algorithms/
+    │   ├── Geometry/
+    │   │   └── Clothoid*Tests.cs
     │   └── TopologicalSorterTests.cs
     ├── Data.Csv/
     │   ├── CsvLineParserTests.cs
@@ -85,9 +93,15 @@ DotNetToolbox/
 
 ### DotNetToolbox.Algorithms
 
-Generic graph algorithms with no runtime dependencies.
+Generic graph and planar path-geometry algorithms with no runtime dependencies.
 
-**Key type:** `TopologicalSorter<T>` (static helper class)
+**Key types:**
+
+| Type | Use Case |
+|---|---|
+| `TopologicalSorter<T>` | Stable dependency ordering |
+| `ClothoidEvaluator` | Evaluate and sample known clothoid parameters |
+| `ClothoidFitter` | Fit one canonical G1 clothoid from two directed tangent poses |
 
 ```csharp
 using DotNetToolbox.Algorithms.Sorting;
@@ -100,6 +114,26 @@ var sorted = TopologicalSorter<string>.Sort(tables, fks);
 ```
 
 Use when you need to order entities by dependency (FK delete order, task sequencing).
+
+The geometry API uses metres and radians and stays independent of vehicle and UI
+semantics. A caller must convert vehicle body heading plus forward/reverse direction
+into the directed path tangent before calling `ClothoidFitter.TryFitG1`.
+
+```csharp
+using DotNetToolbox.Algorithms.Geometry;
+
+var start = new Pose2D(0d, 0d, 0d);
+var end = new Pose2D(2d, 2d, Math.PI / 2d);
+
+if (ClothoidFitter.TryFitG1(start, end, out var fit, out var failure))
+{
+    var samples = ClothoidEvaluator.Sample(fit.Parameters, stepLength: 0.05d);
+}
+```
+
+The fitter uses fixed 2048-subinterval composite Simpson quadrature. This is a
+small deterministic implementation, not an adaptive integrator with a certified
+error bound. See [Algorithms API](api/API_Algorithms.md) for its contract and limits.
 
 ---
 
