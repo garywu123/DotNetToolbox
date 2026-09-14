@@ -2,73 +2,74 @@
 
 ## Project
 
-DotNetToolbox — a collection of reusable .NET 8 class libraries for internal tooling projects.
+DotNetToolbox — reusable .NET class libraries for internal tooling projects,
+published as private GitHub Packages previews.
 
-Primary consumer: **SyncTool** (WinUI 3 app for SGVM reporting database sync).
+Consumers: **SyncTool** (WinUI 3 app for SGVM reporting database sync) and the
+**vehicle-simulation** projects (path geometry and Vehicle COM).
 
 ## Libraries
 
-| Library | Purpose | Dependencies |
-|---|---|---|
-| `DotNetToolbox.Algorithms` | Generic graph algorithms (topological sort) | None |
-| `DotNetToolbox.Data.Csv` | Type-safe CSV reading and writing | None |
-| `DotNetToolbox.Data.SqlServer` | SQL Server schema inspection, type coercion, bulk loading | `DotNetToolbox.Algorithms` |
+| Library | Purpose | Dependencies | Targets |
+|---|---|---|---|
+| `DotNetToolbox.Algorithms` | Graph ordering and planar path geometry | None | `net8.0;net10.0` |
+| `DotNetToolbox.Data.Csv` | Type-safe CSV reading and writing | None | `net8.0` |
+| `DotNetToolbox.Data.SqlServer` | SQL Server schema inspection, type coercion, bulk loading | `Algorithms`, `Data.Csv`, `Microsoft.Data.SqlClient` | `net8.0` |
+
+New and changed libraries target `net8.0;net10.0`, as the test project does;
+add `net10.0` to `Data.Csv` or `Data.SqlServer` when a feature next changes it.
+Code must compile with C# 12, the net8.0 default. A new library uses PackageId
+`GaryWu123.DotNetToolbox.<Name>`, enables `GenerateDocumentationFile`, and adds
+a README package row and a `doc/api` reference.
 
 ## Where To Look First
 
+- `README.md` — packages, feed URL, consumer install commands
 - `doc/Overview.md` — architecture, dependency graph, quick start
 - `doc/spec/` — feature specifications and API contracts (**read before implementing**)
-- `doc/impl/` — implementation plans with test cases (your work orders)
-- `doc/api/` — API reference guides (populated after each IP completes)
-- `src/` — source code
+- `docs/features/` — Feature Plans, such as `F04-private-github-packages.md` for publishing
+- `doc/api/` — consumer API references; read a library's contract before fixing a bug
+- `DotNetToolbox.*/` — source code (there is no `src/` folder); `DotNetToolbox.Tests/` — test patterns
 
 ## Build & Test Commands
 
 ```powershell
-# Build entire solution
-dotnet build DotNetToolbox.sln
-
-# Run all unit tests (no DB required)
-dotnet test DotNetToolbox.sln --filter "Category!=Integration"
-
-# Run integration tests (requires SQL Server — set TOOLBOX_TEST_CONN first)
-dotnet test DotNetToolbox.sln --filter "Category=Integration"
-
-# Run everything
-dotnet test DotNetToolbox.sln
+dotnet build DotNetToolbox.slnx
+dotnet test DotNetToolbox.slnx --filter "Category!=Integration"   # unit tests, no DB
+dotnet test DotNetToolbox.slnx --filter "Category=Integration"    # needs TOOLBOX_TEST_CONN
+dotnet pack DotNetToolbox.slnx -c Release -p:PackageVersion=<version>
 ```
 
-## Environment Variables
-
-Integration tests require a SQL Server instance. Set before running:
+Integration tests need SQL Server. Set the variable for the session, or at User
+scope with `[Environment]::SetEnvironmentVariable(...)`:
 
 ```powershell
-# Windows — current session
 $env:TOOLBOX_TEST_CONN = "Server=localhost;Database=ToolboxTest;Integrated Security=true;TrustServerCertificate=true;"
-
-# Windows — permanent (user scope)
-[Environment]::SetEnvironmentVariable("TOOLBOX_TEST_CONN", "Server=localhost;Database=ToolboxTest;Integrated Security=true;TrustServerCertificate=true;", "User")
 ```
 
-## Implementation Order
+## Branch Naming
 
-Libraries have a strict dependency chain. Always implement in this order:
+- Name a branch `<app>/<feature>` in lowercase kebab-case: `<app>` is the
+  consuming application and `<feature>` is the capability, for example
+  `vehicle-simulation/clothoid` or `vehicle-simulation/vehicle-communication`.
+- Start from the branch whose work the feature needs, for example
+  `vehicle-simulation/vehicle-communication` from `vehicle-simulation/clothoid`,
+  which added `net10.0`.
+- Git cannot create `a/b/c` while branch `a/b` exists; use a hyphen suffix such
+  as `vehicle-simulation/vehicle-communication-crc` for a sub-branch.
+- `etl_runner` predates this rule and keeps its name.
 
-```
-IP_01_Algorithms  →  IP_02_Data_Csv  →  IP_03_Data_SqlServer
-```
+## Preview Release Flow
 
-`IP_03` depends on both `IP_01` (for FK topological sorting) and `IP_02` (for CsvDataReader in bulk load).
+Every consumer shares this flow; publishing details are in `docs/features/F04-private-github-packages.md`.
 
-## Task Routing
-
-| Task | Action |
-|---|---|
-| Implementing a new feature | Read `doc/spec/Spec_*.md` first, then `doc/impl/IP_*.md` |
-| Fixing a bug | Read `doc/api/API_*.md` for the contract, locate source in `src/` |
-| Adding tests | Follow patterns in `src/DotNetToolbox.Tests/` |
-| Understanding a library's public API | Read `doc/api/API_*.md` |
-| Reviewing architecture | Read `doc/Overview.md` |
+1. Finish the work on its `<app>/<feature>` branch; merge any sub-branch back first.
+2. Run the build and unit-test commands above.
+3. Regenerate `doc/api/API_<Library>.md` for every changed library from its XML
+   doc comments, using `.github/prompts/generate-api-doc.prompt.md`.
+4. Pack with version `<x.y.z>-<feature>.<n>`, for example `0.2.0-vehicle-communication.1`,
+   and push it manually with the operator's GitHub Packages credentials. Never reuse a version.
+5. Tag the same commit `v<version>`. Consumers reference that exact version, never a project path.
 
 ## Hard Rules
 
@@ -77,14 +78,22 @@ IP_01_Algorithms  →  IP_02_Data_Csv  →  IP_03_Data_SqlServer
 - Every public method must have **at least one unit test**
 - Use `TryParse` patterns — **never exception-driven type detection**
 - `DotNetToolbox.Algorithms` and `DotNetToolbox.Data.Csv` must be **cross-platform** — no Windows-specific APIs, no P/Invoke
-- `DotNetToolbox.Data.SqlServer` targets `net8.0` (not `net8.0-windows`) but may use `Microsoft.Data.SqlClient`
+- `DotNetToolbox.Data.SqlServer` must not use a `-windows` target framework but may use `Microsoft.Data.SqlClient`
 - Treat warnings as errors — `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` is set in all projects
 - Nullable reference types are enabled — no `#nullable disable`
+- Never commit feed credentials, tokens or production connection strings
 
 ## Testing Conventions
 
-- Framework: **xUnit** + **FluentAssertions**
+- Framework: **xUnit** + **FluentAssertions**, with **NSubstitute** for mocking
 - Do not use `Assert.*` — use `.Should()` exclusively
 - Integration tests: `[Trait("Category", "Integration")]`
 - Test method naming: `MethodName_Scenario_ExpectedResult`
 - Shared fixtures via `IClassFixture<T>` or `ICollectionFixture<T>`
+
+## Working Rules
+
+- Precedence: the current explicit user instruction, then the task's spec and
+  Feature Plan, then repository evidence. Report conflicts instead of guessing.
+- Record only commands and results that actually ran; report unknowns and risks.
+- Reply to the user in Chinese; lead with the result and use plain, direct language.

@@ -2,12 +2,13 @@
 
 ## Project Overview
 
-DotNetToolbox is a set of reusable .NET 8 class libraries. There is no UI code in this repo.
-The primary consumer is the SyncTool WinUI 3 application (separate repo/folder).
+DotNetToolbox is a set of reusable .NET class libraries. There is no UI code in this repo.
+Consumers include the SyncTool WinUI 3 application and the vehicle-simulation projects (separate repos/folders).
+Target frameworks, branch naming, commands and the preview release flow live in the root `AGENTS.md`.
 
 ## Language & Framework
 
-- **C# 12**, `.NET 8`
+- **C# 12** (the net8.0 default; code must compile for every target), `.NET 8` and `.NET 10`
 - Nullable reference types: **enabled** in all projects
 - Implicit usings: **enabled**
 - Treat warnings as errors: **enabled**

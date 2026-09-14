@@ -1,5 +1,5 @@
 ---
-applyTo: "src/DotNetToolbox.Tests/**/*.cs"
+applyTo: "DotNetToolbox.Tests/**/*.cs"
 ---
 
 ## Test Project Rules

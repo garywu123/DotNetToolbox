@@ -14,9 +14,10 @@ The output file goes in `doc/api/` and must be suitable for calling code (consum
 
 Determine which library to document from the user's request or the current context:
 
-- `DotNetToolbox.Algorithms` → source in `src/DotNetToolbox.Algorithms/`
-- `DotNetToolbox.Data.Csv` → source in `src/DotNetToolbox.Data.Csv/`
-- `DotNetToolbox.Data.SqlServer` → source in `src/DotNetToolbox.Data.SqlServer/`
+- `DotNetToolbox.Algorithms` → source in `DotNetToolbox.Algorithms/`
+- `DotNetToolbox.Data.Csv` → source in `DotNetToolbox.Data.Csv/`
+- `DotNetToolbox.Data.SqlServer` → source in `DotNetToolbox.Data.SqlServer/`
+- A newer library `DotNetToolbox.<Name>` → source in `DotNetToolbox.<Name>/`
 
 ### Step 2 — Read source files
 
