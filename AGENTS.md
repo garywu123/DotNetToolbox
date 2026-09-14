@@ -1,98 +1,93 @@
-# AGENTS
+# DotNetToolbox Agent Instructions
 
-## Project
+This software repository contains reusable, UI-free .NET libraries published as
+private NuGet previews for consumers such as SyncTool and Vehicle Simulator.
 
-DotNetToolbox — reusable .NET class libraries for internal tooling projects,
-published as private GitHub Packages previews.
+## Documents
 
-Consumers: **SyncTool** (WinUI 3 app for SGVM reporting database sync) and the
-**vehicle-simulation** projects (path geometry and Vehicle COM).
+| Need | Read |
+|---|---|
+| Packages, consumers, feed setup, and install examples | `README.md` |
+| Approved library behavior and API contracts | `doc/spec/`, then the matching `doc/api/` reference |
+| Preview publishing workflow | `docs/features/F04-private-github-packages.md` |
 
-## Libraries
+Read only the route required by the task. Source projects are in
+`DotNetToolbox.*/`; tests and their patterns are in `DotNetToolbox.Tests/`.
 
-| Library | Purpose | Dependencies | Targets |
-|---|---|---|---|
-| `DotNetToolbox.Algorithms` | Graph ordering and planar path geometry | None | `net8.0;net10.0` |
-| `DotNetToolbox.Data.Csv` | Type-safe CSV reading and writing | None | `net8.0` |
-| `DotNetToolbox.Data.SqlServer` | SQL Server schema inspection, type coercion, bulk loading | `Algorithms`, `Data.Csv`, `Microsoft.Data.SqlClient` | `net8.0` |
+## Precedence
 
-New and changed libraries target `net8.0;net10.0`, as the test project does;
-add `net10.0` to `Data.Csv` or `Data.SqlServer` when a feature next changes it.
-Code must compile with C# 12, the net8.0 default. A new library uses PackageId
-`GaryWu123.DotNetToolbox.<Name>`, enables `GenerateDocumentationFile`, and adds
-a README package row and a `doc/api` reference.
+Resolve conflicts in this order: the current explicit user instruction, the
+applicable specification or Feature Plan, then repository evidence. Report a
+conflict instead of promoting observed behavior into intended behavior.
 
-## Where To Look First
+## Library Surfaces
 
-- `README.md` — packages, feed URL, consumer install commands
-- `doc/Overview.md` — architecture, dependency graph, quick start
-- `doc/spec/` — feature specifications and API contracts (**read before implementing**)
-- `docs/features/` — Feature Plans, such as `F04-private-github-packages.md` for publishing
-- `doc/api/` — consumer API references; read a library's contract before fixing a bug
-- `DotNetToolbox.*/` — source code (there is no `src/` folder); `DotNetToolbox.Tests/` — test patterns
+| Library | Responsibility | Current targets |
+|---|---|---|
+| `DotNetToolbox.Algorithms` | Graph ordering and planar path geometry; BCL only | `net8.0;net10.0` |
+| `DotNetToolbox.Data.Csv` | Type-safe CSV reading and writing; BCL only | `net8.0` |
+| `DotNetToolbox.Data.SqlServer` | SQL Server schema, coercion, and bulk loading; depends on the other libraries and `Microsoft.Data.SqlClient` | `net8.0` |
 
-## Build & Test Commands
+New and changed libraries target `net8.0;net10.0`; add `net10.0` to either
+data library when a feature next changes it.
 
-```powershell
-dotnet build DotNetToolbox.slnx
-dotnet test DotNetToolbox.slnx --filter "Category!=Integration"   # unit tests, no DB
-dotnet test DotNetToolbox.slnx --filter "Category=Integration"    # needs TOOLBOX_TEST_CONN
-dotnet pack DotNetToolbox.slnx -c Release -p:PackageVersion=<version>
-```
+## Verified Commands And Checks
 
-Integration tests need SQL Server. Set the variable for the session, or at User
-scope with `[Environment]::SetEnvironmentVariable(...)`:
+- Build: `dotnet build DotNetToolbox.slnx`
+- Unit tests: `dotnet test DotNetToolbox.slnx --filter "Category!=Integration"`
+- Integration tests, when `TOOLBOX_TEST_CONN` is configured:
+  `dotnet test DotNetToolbox.slnx --filter "Category=Integration"`
 
-```powershell
-$env:TOOLBOX_TEST_CONN = "Server=localhost;Database=ToolboxTest;Integrated Security=true;TrustServerCertificate=true;"
-```
+## Conventions
 
-## Branch Naming
+- Nullable reference types, implicit usings, and warnings-as-errors are enabled
+  in every project. Compile changes for every configured target.
+- A new library uses package ID `GaryWu123.DotNetToolbox.<Name>`, generates XML
+  documentation, and adds its package and API-reference routes to `README.md`.
+- Document every public member meaningfully. Keep public APIs minimal, validate
+  their inputs, propagate cancellation through asynchronous I/O, and dispose
+  owned resources correctly.
+- Use `TryParse`-style control flow rather than exception-driven type detection.
+- Keep Algorithms and Data.Csv cross-platform. Data.SqlServer may depend on
+  `Microsoft.Data.SqlClient` but must not use a Windows-only target framework.
+- Never commit feed credentials, tokens, hardcoded connection strings, or
+  production connection strings.
 
-- Name a consumer-driven branch `<app>/<function>` in lowercase kebab-case,
-  for example `vehicle-simulator/clothoid` or `sync-tool/csv-import`.
-- Complete these branches serially unless the user explicitly chooses concurrent
-  development with separate worktrees or repository copies.
-- `etl_runner` predates this rule and keeps its name.
+## Branches And Preview Releases
 
-## Preview Release Flow
-
-Every consumer shares this flow; publishing details are in `docs/features/F04-private-github-packages.md`.
-
-1. Finish and commit the work on the consumer branch.
-2. Run the build and unit-test commands above.
-3. Regenerate `doc/api/API_<Library>.md` for every changed library from its XML
-   doc comments, using `.github/prompts/generate-api-doc.prompt.md`.
-4. Use the `publish-preview` VS Code task from the consumer branch. It builds, runs
-  non-integration unit tests, packs and publishes the private preview, then creates
-  and pushes the version tag.
-5. Use a new version `<x.y.z>-<app>-<function>.<n>`, for example
-  `0.2.0-vehicle-simulator-clothoid.1`. Never reuse a published version;
-  consumers reference that exact version, never a project path.
-
-## Hard Rules
-
-- All public members **must** have XML doc comments (`<summary>`, `<param>`, `<returns>`, `<remarks>` where helpful)
-- **No hardcoded connection strings** in source — use the `TOOLBOX_TEST_CONN` environment variable in tests
-- Every public method must have **at least one unit test**
-- Use `TryParse` patterns — **never exception-driven type detection**
-- `DotNetToolbox.Algorithms` and `DotNetToolbox.Data.Csv` must be **cross-platform** — no Windows-specific APIs, no P/Invoke
-- `DotNetToolbox.Data.SqlServer` must not use a `-windows` target framework but may use `Microsoft.Data.SqlClient`
-- Treat warnings as errors — `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` is set in all projects
-- Nullable reference types are enabled — no `#nullable disable`
-- Never commit feed credentials, tokens or production connection strings
+- Name consumer-driven branches `<app>/<function>` in lowercase kebab-case,
+  such as `vehicle-simulator/clothoid` or `sync-tool/csv-import`.
+  `etl_runner` is a legacy exception.
+- Complete branches serially unless the user explicitly chooses separate
+  worktrees or repository copies for concurrent development.
+- Before publishing, commit a clean tree, run build and unit tests, and refresh
+  each changed library's `doc/api/API_<Library>.md` using
+  `.github/prompts/generate-api-doc.prompt.md`.
+- Run the verified VS Code `publish-preview` task. It delegates to
+  `scripts/publish-preview.ps1`, publishes packages, then creates and pushes
+  the tag; it does not push the branch.
+- Use a new immutable `<x.y.z>-<app>-<function>.<n>` version and tag it
+  `v<version>`. Consumers use the exact NuGet version, never a project path.
 
 ## Testing Conventions
 
-- Framework: **xUnit** + **FluentAssertions**, with **NSubstitute** for mocking
-- Do not use `Assert.*` — use `.Should()` exclusively
-- Integration tests: `[Trait("Category", "Integration")]`
-- Test method naming: `MethodName_Scenario_ExpectedResult`
-- Shared fixtures via `IClassFixture<T>` or `ICollectionFixture<T>`
+- Use xUnit, FluentAssertions, and NSubstitute; use `.Should()` rather than
+  `Assert.*`.
+- Name tests `MethodName_Scenario_ExpectedResult`, mark database tests with
+  `[Trait("Category", "Integration")]`, and read `TOOLBOX_TEST_CONN`.
+- Add a happy-path test before relevant failure paths. Every public method has at
+  least one unit test.
+
+## Communication Style
+
+- Lead with the result in concise, clear Chinese.
+- Include the verification, assumptions, conflicts, and remaining risks needed
+  to act.
 
 ## Working Rules
 
-- Precedence: the current explicit user instruction, then the task's spec and
-  Feature Plan, then repository evidence. Report conflicts instead of guessing.
-- Record only commands and results that actually ran; report unknowns and risks.
-- Reply to the user in Chinese; lead with the result and use plain, direct language.
+1. Make the smallest bounded change and reuse existing libraries and tools.
+2. Read the applicable specification and API contract before changing behavior.
+3. Keep package dependencies minimal and respect the library boundaries above.
+4. Report only commands and results actually observed; do not guess around
+   missing configuration, credentials, services, or tests.
