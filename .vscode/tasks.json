@@ -1,0 +1,35 @@
+{
+  "version": "2.0.0",
+  "inputs": [
+    {
+      "id": "packageVersion",
+      "type": "promptString",
+      "description": "New NuGet preview version, for example 0.2.0-road-system-utils.1"
+    }
+  ],
+  "tasks": [
+    {
+      "label": "publish-preview",
+      "type": "shell",
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}/scripts/publish-preview.ps1",
+        "-Version",
+        "${input:packageVersion}"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    }
+  ]
+}

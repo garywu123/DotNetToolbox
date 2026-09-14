@@ -19,7 +19,7 @@ An operator can manually publish one versioned, private preview of the three Dot
 ## Implementation
 
 1. Add minimal package metadata and a repository README; retain compiler XML documentation and current `doc/api` reference files.
-2. Build, test, pack, and inspect the preview packages locally; `v*` tag pushes also run the non-integration unit tests, pack the version derived from the tag, and publish with GitHub Actions' `GITHUB_TOKEN`.
+2. Use the local VS Code `publish-preview` task to build, test, pack, inspect, and publish a preview from a feature branch. The task creates and pushes the matching tag only after successful package publishing.
 3. Tag the same committed source, configure the consumer's private source locally with a PAT, and restore exact preview versions without project references.
 
 ## Happy Paths

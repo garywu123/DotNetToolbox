@@ -71,22 +71,19 @@ When using a released package, open this README from the tag that matches the pa
 dotnet test DotNetToolbox.slnx --filter "Category!=Integration"
 ```
 
-### Preview release
+### Preview release from a feature branch
 
-Pushing a version tag triggers the GitHub Actions workflow at [`.github/workflows/publish-packages.yml`](.github/workflows/publish-packages.yml). It restores, builds, runs all non-integration unit tests on .NET 8 and .NET 10, packs the three library projects, and publishes them privately to GitHub Packages with the version taken from the tag. The workflow uses GitHub's short-lived `GITHUB_TOKEN`; no PAT secret is required in the repository.
+Use the `publish-preview` VS Code task to publish a preview from the current feature branch. It prompts for a new version, requires a clean working tree, confirms that the version tag does not exist locally or on `origin`, then builds, runs the non-integration unit tests, packs the three library projects, publishes them to the configured private feed, creates an annotated tag, and pushes that tag.
 
-Before creating the tag, complete the local release checks and regenerate the API references for every changed library. Use a new version in the format `<x.y.z>-<feature>.<n>`; published NuGet versions cannot be overwritten.
+In VS Code, choose **Terminal > Run Task**, then select **publish-preview**. Enter a new version in the format `<x.y.z>-<feature>.<n>`, for example `0.2.0-road-system-utils.1`. The task uses the local `github-garywu123` source configured in the previous section; it never stores or displays a PAT.
+
+Before running the task, regenerate the API references for every changed library. Published NuGet versions cannot be overwritten. Do not move or reuse an existing release tag: create a new version instead.
 
 ```powershell
-$version = "0.2.0-vehicle-communication.1"
-
-dotnet build DotNetToolbox.slnx
-dotnet test DotNetToolbox.slnx --filter "Category!=Integration"
-git tag "v$version"
-git push origin "v$version"
+Terminal > Run Task > publish-preview
 ```
 
-The workflow intentionally excludes `[Trait("Category", "Integration")]` tests because they require a separately configured SQL Server connection. Run those locally when `TOOLBOX_TEST_CONN` is available:
+The task excludes `[Trait("Category", "Integration")]` tests because they require a separately configured SQL Server connection. Run those locally when `TOOLBOX_TEST_CONN` is available:
 
 ```powershell
 dotnet test DotNetToolbox.slnx --filter "Category=Integration"
