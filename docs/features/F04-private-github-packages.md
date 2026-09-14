@@ -1,6 +1,6 @@
 # F04: Private GitHub Packages
 
-**Status:** in_progress
+**Status:** complete
 
 **Sources:** User request; [repository guidance](../../AGENTS.md); [API overview](../../doc/Overview.md)
 
@@ -14,13 +14,13 @@ An operator can manually publish one versioned, private preview of the three Dot
 
 **In:** Package metadata, one manual preview release, a repository README, exact consumer references, and version-tagged API-document access.
 
-**Out:** GitHub Actions automation, a documentation web site, and stable-package release policy.
+**Out:** A documentation web site and stable-package release policy.
 
 ## Implementation
 
 1. Add minimal package metadata and a repository README; retain compiler XML documentation and current `doc/api` reference files.
-2. Build, test, pack, and inspect the preview packages locally; then manually push them with the operator's GitHub Packages credentials. Completed manually for `0.1.0-etl-runner.1`; tag pushed.
-3. Tag the same committed source, configure the consumer's private source locally, and restore exact preview versions without project references.
+2. Build, test, pack, and inspect the preview packages locally; `v*` tag pushes also run the non-integration unit tests, pack the version derived from the tag, and publish with GitHub Actions' `GITHUB_TOKEN`.
+3. Tag the same committed source, configure the consumer's private source locally with a PAT, and restore exact preview versions without project references.
 
 ## Happy Paths
 

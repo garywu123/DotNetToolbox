@@ -21,6 +21,31 @@ dotnet add package GaryWu123.DotNetToolbox.Data.SqlServer --version "[0.1.0-etl-
 `Data.SqlServer` brings `Algorithms` and `Data.Csv` as NuGet dependencies.
 The commands show the first preview version; replace it with the exact version matching the tag you intend to consume.
 
+### Private feed access
+
+Packages are private by default. Each machine that restores them needs a GitHub personal access token (classic) with `read:packages` and access to the associated repository. A machine that manually publishes packages also needs `write:packages`.
+
+Create the token in GitHub under **Settings > Developer settings > Personal access tokens > Tokens (classic)**. Do not commit it or place it in a repository `NuGet.config` file.
+
+Configure the source for the current Windows user. The prompt hides the token while it is entered, and NuGet stores the source credential using Windows user encryption.
+
+```powershell
+$env:GITHUB_TOKEN = [System.Net.NetworkCredential]::new(
+	"",
+	(Read-Host "GitHub PAT" -AsSecureString)
+).Password
+
+dotnet nuget add source "https://nuget.pkg.github.com/garywu123/index.json" `
+	--name "github-garywu123" `
+	--username "garywu123" `
+	--password $env:GITHUB_TOKEN `
+	--valid-authentication-types "basic"
+
+Remove-Item Env:\GITHUB_TOKEN
+```
+
+If `github-garywu123` already exists, replace `add source` with `update source`.
+
 ## Libraries
 
 | Package | Purpose | Common API |
@@ -44,7 +69,27 @@ When using a released package, open this README from the tag that matches the pa
 
 ```powershell
 dotnet test DotNetToolbox.slnx --filter "Category!=Integration"
-dotnet pack DotNetToolbox.slnx -c Release -p:PackageVersion=0.1.0-etl-runner.1
+```
+
+### Preview release
+
+Pushing a version tag triggers the GitHub Actions workflow at [`.github/workflows/publish-packages.yml`](.github/workflows/publish-packages.yml). It restores, builds, runs all non-integration unit tests on .NET 8 and .NET 10, packs the three library projects, and publishes them privately to GitHub Packages with the version taken from the tag. The workflow uses GitHub's short-lived `GITHUB_TOKEN`; no PAT secret is required in the repository.
+
+Before creating the tag, complete the local release checks and regenerate the API references for every changed library. Use a new version in the format `<x.y.z>-<feature>.<n>`; published NuGet versions cannot be overwritten.
+
+```powershell
+$version = "0.2.0-vehicle-communication.1"
+
+dotnet build DotNetToolbox.slnx
+dotnet test DotNetToolbox.slnx --filter "Category!=Integration"
+git tag "v$version"
+git push origin "v$version"
+```
+
+The workflow intentionally excludes `[Trait("Category", "Integration")]` tests because they require a separately configured SQL Server connection. Run those locally when `TOOLBOX_TEST_CONN` is available:
+
+```powershell
+dotnet test DotNetToolbox.slnx --filter "Category=Integration"
 ```
 
 See [AGENTS.md](AGENTS.md) for repository conventions and test constraints.

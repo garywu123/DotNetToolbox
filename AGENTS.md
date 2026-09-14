@@ -67,9 +67,11 @@ Every consumer shares this flow; publishing details are in `docs/features/F04-pr
 2. Run the build and unit-test commands above.
 3. Regenerate `doc/api/API_<Library>.md` for every changed library from its XML
    doc comments, using `.github/prompts/generate-api-doc.prompt.md`.
-4. Pack with version `<x.y.z>-<feature>.<n>`, for example `0.2.0-vehicle-communication.1`,
-   and push it manually with the operator's GitHub Packages credentials. Never reuse a version.
-5. Tag the same commit `v<version>`. Consumers reference that exact version, never a project path.
+4. Use a new version `<x.y.z>-<feature>.<n>`, for example
+  `0.2.0-vehicle-communication.1`; never reuse a published version.
+5. Tag the same commit `v<version>` and push the tag. The tag-triggered GitHub Actions
+  workflow builds, runs non-integration unit tests, packs, and publishes the private
+  GitHub Packages preview. Consumers reference that exact version, never a project path.
 
 ## Hard Rules
 

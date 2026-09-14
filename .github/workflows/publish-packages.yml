@@ -1,0 +1,46 @@
+name: Publish NuGet packages
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Restore
+        run: dotnet restore DotNetToolbox.slnx
+
+      - name: Build
+        run: dotnet build DotNetToolbox.slnx --configuration Release --no-restore
+
+      - name: Run unit tests
+        run: dotnet test DotNetToolbox.slnx --configuration Release --no-build --filter "Category!=Integration"
+
+      - name: Pack
+        shell: bash
+        run: dotnet pack DotNetToolbox.slnx --configuration Release --no-build --no-restore --output artifacts/packages -p:PackageVersion="${GITHUB_REF_NAME#v}"
+
+      - name: Publish to GitHub Packages
+        shell: bash
+        run: |
+          for package in artifacts/packages/*.nupkg; do
+            dotnet nuget push "$package" \
+              --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
+              --api-key "${{ github.token }}" \
+              --skip-duplicate
+          done
