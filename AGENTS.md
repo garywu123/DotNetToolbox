@@ -49,30 +49,26 @@ $env:TOOLBOX_TEST_CONN = "Server=localhost;Database=ToolboxTest;Integrated Secur
 
 ## Branch Naming
 
-- Name a branch `<app>/<feature>` in lowercase kebab-case: `<app>` is the
-  consuming application and `<feature>` is the capability, for example
-  `vehicle-simulation/clothoid` or `vehicle-simulation/vehicle-communication`.
-- Start from the branch whose work the feature needs, for example
-  `vehicle-simulation/vehicle-communication` from `vehicle-simulation/clothoid`,
-  which added `net10.0`.
-- Git cannot create `a/b/c` while branch `a/b` exists; use a hyphen suffix such
-  as `vehicle-simulation/vehicle-communication-crc` for a sub-branch.
+- Name a consumer-driven branch `<app>/<function>` in lowercase kebab-case,
+  for example `vehicle-simulator/clothoid` or `sync-tool/csv-import`.
+- Complete these branches serially unless the user explicitly chooses concurrent
+  development with separate worktrees or repository copies.
 - `etl_runner` predates this rule and keeps its name.
 
 ## Preview Release Flow
 
 Every consumer shares this flow; publishing details are in `docs/features/F04-private-github-packages.md`.
 
-1. Finish the work on its `<app>/<feature>` branch; merge any sub-branch back first.
+1. Finish and commit the work on the consumer branch.
 2. Run the build and unit-test commands above.
 3. Regenerate `doc/api/API_<Library>.md` for every changed library from its XML
    doc comments, using `.github/prompts/generate-api-doc.prompt.md`.
-4. Use the `publish-preview` VS Code task from the feature branch. It builds, runs
+4. Use the `publish-preview` VS Code task from the consumer branch. It builds, runs
   non-integration unit tests, packs and publishes the private preview, then creates
   and pushes the version tag.
-5. Use a new version `<x.y.z>-<feature>.<n>`, for example
-  `0.2.0-vehicle-communication.1`; never reuse a published version. Consumers
-  reference that exact version, never a project path.
+5. Use a new version `<x.y.z>-<app>-<function>.<n>`, for example
+  `0.2.0-vehicle-simulator-clothoid.1`. Never reuse a published version;
+  consumers reference that exact version, never a project path.
 
 ## Hard Rules
 

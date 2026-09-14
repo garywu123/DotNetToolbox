@@ -4,7 +4,7 @@
     {
       "id": "packageVersion",
       "type": "promptString",
-      "description": "New NuGet preview version, for example 0.2.0-road-system-utils.1"
+      "description": "New NuGet preview version, for example 0.2.0-vehicle-simulator-clothoid.1"
     }
   ],
   "tasks": [

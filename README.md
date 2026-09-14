@@ -71,11 +71,11 @@ When using a released package, open this README from the tag that matches the pa
 dotnet test DotNetToolbox.slnx --filter "Category!=Integration"
 ```
 
-### Preview release from a feature branch
+### Preview release from an app/function branch
 
-Use the `publish-preview` VS Code task to publish a preview from the current feature branch. It prompts for a new version, requires a clean working tree, confirms that the version tag does not exist locally or on `origin`, then builds, runs the non-integration unit tests, packs the three library projects, publishes them to the configured private feed, creates an annotated tag, and pushes that tag.
+Use the `publish-preview` VS Code task to publish a preview from the current `<app>/<function>` branch. It prompts for a new version, requires a clean working tree, confirms that the version tag does not exist locally or on `origin`, then builds, runs the non-integration unit tests, packs the three library projects, publishes them to the configured private feed, creates an annotated tag, and pushes that tag.
 
-In VS Code, choose **Terminal > Run Task**, then select **publish-preview**. Enter a new version in the format `<x.y.z>-<feature>.<n>`, for example `0.2.0-road-system-utils.1`. The task uses the local `github-garywu123` source configured in the previous section; it never stores or displays a PAT.
+In VS Code, choose **Terminal > Run Task**, then select **publish-preview**. Enter a new version in the format `<x.y.z>-<app>-<function>.<n>`, for example `0.2.0-vehicle-simulator-clothoid.1`. The task uses the local `github-garywu123` source configured in the previous section; it never stores or displays a PAT.
 
 Before running the task, regenerate the API references for every changed library. Published NuGet versions cannot be overwritten. Do not move or reuse an existing release tag: create a new version instead.
 
